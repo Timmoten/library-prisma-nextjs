@@ -12,3 +12,49 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model Book  {
+  id String @id @default(cuid())
+  title String
+  author String
+  published DateTime
+  isbn String @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  loans BookLoan[]
+  @@index([isbn])
+}
+
+
+
+model Member {
+  id String @id @default(cuid())
+  name String
+  email String @unique
+  phone String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  loans BookLoan[]
+  @@index([email])
+}
+
+model BookLoan {
+  id String @id @default(cuid())
+  bookId String
+  memberId String
+  loanDate DateTime
+  dueDate DateTime
+  returnDate DateTime?
+  status Status
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  book Book @relation(fields: [bookId], references: [id])
+  member Member @relation(fields: [memberId], references: [id])
+  @@index([bookId, memberId])
+}
+
+enum Status {
+ ACTIVE
+ RETURNED
+ OVERDUE 
+}
