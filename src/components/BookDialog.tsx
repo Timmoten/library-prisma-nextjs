@@ -27,7 +27,7 @@ export function BookDialog({ data }: {data?: book}) {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button ><PenBox /></Button>
+        <Button className="border-2" >{!data ? "Add Book" : <PenBox /> }</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
