@@ -21,7 +21,7 @@ model book  {
   isbn String
   createdAt DateTime @default(now()) @db.Timestamptz(0)
   updatedAt DateTime @updatedAt @db.Timestamptz(0)
-  loans bookLoan[]
+  loans bookloan[]
   @@index([isbn])
 }
 
@@ -34,11 +34,11 @@ model member {
   phone String?
   createdAt DateTime @default(now()) @db.Timestamptz(0)
   updatedAt DateTime @updatedAt @db.Timestamptz(0)
-  loans bookLoan[]
+  loans bookloan[]
   @@index([email])
 }
 
-model bookLoan {
+model bookloan {
   id String @id @default(cuid())
   bookId String
   memberId String
@@ -51,7 +51,6 @@ model bookLoan {
   book book @relation(fields: [bookId], references: [id])
   member member @relation(fields: [memberId], references: [id])
   @@index([bookId, memberId])
-  @@map("bookloan")
 }
 
 enum Status {
