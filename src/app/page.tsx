@@ -14,7 +14,8 @@ export default async function Page() {
     <main>
       <div>
         <h1>Loans</h1>
-        <BookLoanList data={loans} />
+        <BookLoanList data={loans}
+        />
       </div>
       <div>
         <h1>Books</h1>

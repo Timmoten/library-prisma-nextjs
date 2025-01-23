@@ -1,12 +1,14 @@
 "use client";
 
-import { book, bookLoan, member } from "@prisma/client";
-import { BookDialog } from "./book-dialog";
-import { Button } from "./ui/button";
-import { DeleteBook } from "@/app/actions/book";
-import { Trash2 } from "lucide-react";
+import { book, bookloan, member } from "@prisma/client";
+// import { BookDialog } from "./book-dialog";
+// import { Button } from "./ui/button";
+// import { DeleteBook } from "@/app/actions/book";
+// import { Trash2 } from "lucide-react";
 
-export default function BookLoanCard({ data }: { data: {loan: bookLoan , member: member, book: book } }) {
+
+
+export default function BookLoanCard( data : { loan: bookloan , member: member, book: book }) {
   return (
     <div
       key={data.loan.id}
@@ -21,12 +23,12 @@ export default function BookLoanCard({ data }: { data: {loan: bookLoan , member:
         {data.loan.status==="RETURNED" && <p>Book returned on: {data.loan.returnDate?.toDateString()}</p>}
       </div>
       <div className="flex my-auto">
-        <BookDialog data={data} />
+        {/* <BookDialog data={data} /> */}
       </div>
       <div className="flex my-auto">
-        <Button variant={"destructive"} onClick={() => DeleteBook(data.id)}>
+        {/* <Button variant={"destructive"} onClick={() => DeleteBook(data.id)}>
         <Trash2 />
-        </Button>
+        </Button> */}
       </div>
     </div>
   );
