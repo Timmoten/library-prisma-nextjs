@@ -1,26 +1,20 @@
-import BookList from "@/components/BookList";
+import BookList from "@/components/book-list";
 import { getBooks } from "./actions/book";
-//import BookForm from "@/components/BookForm";
-//import { BookDialog } from "@/components/BookDialog";
-//import MemberForm from "@/components/MemberForm";
-//import { MemberDialog } from "@/components/MemberDialog";
 import { getMembers } from "./actions/member";
-import MemberList from "@/components/MemberList";
-//import BookForm from "@/components/BookForm";
+import MemberList from "@/components/member-list";
+import { getBookLoans } from "./actions/bookloan";
+import BookLoanList from "@/components/book-loan-list";
 
 
 export default async function Page() {
   const books = await getBooks();
   const members = await getMembers();
+  const loans = await getBookLoans();
   return (
     <main>
       <div>
-        {/* <div>
-        <BookForm />
-        </div>
-        <div>
-        <MemberForm />
-        </div> */}
+        <h1>Loans</h1>
+        <BookLoanList data={loans} />
       </div>
       <div>
         <h1>Books</h1>

@@ -11,7 +11,7 @@ import {
 
 import { member } from "@prisma/client";
 import { PenBox } from "lucide-react";
-import MemberForm from "./MemberForm";
+import MemberForm from "./member-form";
 
 export function MemberDialog({ data }: {data?: member}) {
 

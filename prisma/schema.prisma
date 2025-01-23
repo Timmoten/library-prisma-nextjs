@@ -51,6 +51,7 @@ model bookLoan {
   book book @relation(fields: [bookId], references: [id])
   member member @relation(fields: [memberId], references: [id])
   @@index([bookId, memberId])
+  @@map("bookloan")
 }
 
 enum Status {

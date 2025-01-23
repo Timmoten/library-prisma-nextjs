@@ -3,7 +3,7 @@
 import { member } from "@prisma/client";
 import { Button } from "./ui/button";
 import { Trash2 } from "lucide-react";
-import { MemberDialog } from "./MemberDialog";
+import { MemberDialog } from "./member-dialog";
 import { DeleteMember } from "@/app/actions/member";
 
 export default function MemberCard({ data }: { data: member }) {

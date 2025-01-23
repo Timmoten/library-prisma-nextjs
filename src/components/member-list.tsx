@@ -1,7 +1,7 @@
 "use client";
 
 import { member } from "@prisma/client";
-import MemberCard from "./MemberCard";
+import MemberCard from "./member-card";
 
 export default function MemberList({ data }: { data: member[] }) {
     return (

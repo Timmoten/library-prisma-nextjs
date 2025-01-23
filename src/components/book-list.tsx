@@ -1,7 +1,7 @@
 "use client";
 
 import { book } from "@prisma/client";
-import BookCard from "./BookCard";
+import BookCard from "./book-card";
 
 export default function BookList({ data }: { data: book[] }) {
     return (

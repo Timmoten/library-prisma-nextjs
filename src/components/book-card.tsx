@@ -1,7 +1,7 @@
 "use client";
 
 import { book } from "@prisma/client";
-import { BookDialog } from "./BookDialog";
+import { BookDialog } from "./book-dialog";
 import { Button } from "./ui/button";
 import { DeleteBook } from "@/app/actions/book";
 import { Trash2 } from "lucide-react";

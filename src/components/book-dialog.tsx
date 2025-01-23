@@ -17,7 +17,7 @@ import {
 
 // import { Input } from "@/components/ui/input"
 // import { Label } from "@/components/ui/label"
-import BookForm from "./BookForm";
+import BookForm from "./book-form";
 import { book } from "@prisma/client";
 import { PenBox } from "lucide-react";
 
