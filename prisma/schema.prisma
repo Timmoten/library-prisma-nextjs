@@ -56,5 +56,5 @@ model bookloan {
 enum Status {
  ACTIVE
  RETURNED
- OVERDUE 
+ OVERDUE
 }

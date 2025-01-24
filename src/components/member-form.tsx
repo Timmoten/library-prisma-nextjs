@@ -116,7 +116,7 @@ export default function MemberForm({ data }: {data?: member}) {
                 name="phone"
                 type="text"
                 defaultValue={data?.phone? data.phone : ""}
-                placeholder="Optional"
+                placeholder="Optional 0701234567"
                 className="border-2 border-black rounded-md m-2"
               />
             </div>
