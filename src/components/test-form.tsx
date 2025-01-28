@@ -1,5 +1,7 @@
 "use client"
 
+
+
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Check, ChevronsUpDown } from "lucide-react"
 import { useForm } from "react-hook-form"
@@ -31,26 +33,36 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 import { toast } from "@/hooks/use-toast"
+//import { getMembers } from "@/app/actions/member"
+import { book, member } from "@prisma/client"
 
-const languages = [
-  { label: "English", value: "en" },
-  { label: "French", value: "fr" },
-  { label: "German", value: "de" },
-  { label: "Spanish", value: "es" },
-  { label: "Portuguese", value: "pt" },
-  { label: "Russian", value: "ru" },
-  { label: "Japanese", value: "ja" },
-  { label: "Korean", value: "ko" },
-  { label: "Chinese", value: "zh" },
-] as const
+// const languages = [
+//   { label: "English", value: "en" },
+//   { label: "French", value: "fr" },
+//   { label: "German", value: "de" },
+//   { label: "Spanish", value: "es" },
+//   { label: "Portuguese", value: "pt" },
+//   { label: "Russian", value: "ru" },
+//   { label: "Japanese", value: "ja" },
+//   { label: "Korean", value: "ko" },
+//   { label: "Chinese", value: "zh" },
+// ] as const
+
+//const members = await getMembers();
 
 const FormSchema = z.object({
   language: z.string({
     required_error: "Please select a language.",
   }),
+  member: z.string({
+    required_error: "Please select a member.",
+  }),
+  book: z.string({
+    required_error: "Please select a book.",
+  }),
 })
 
-export function ComboboxForm() {
+export function ComboboxForm( data:  { members: member[], books: book[] }) {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
   })
@@ -66,10 +78,30 @@ export function ComboboxForm() {
     })
   }
 
+  const members2 = data.members.map((member) => 
+  {return {label: member.name, value: member.id}}
+  );
+
+  const books2 = data.books.map((book) => {
+    return { label: book.title, value: book.id };
+  });
+
+  // [
+  //   { label: "English", value: "en" },
+  //   { label: "French", value: "fr" },
+  //   { label: "German", value: "de" },
+  //   { label: "Spanish", value: "es" },
+  //   { label: "Portuguese", value: "pt" },
+  //   { label: "Russian", value: "ru" },
+  //   { label: "Japanese", value: "ja" },
+  //   { label: "Korean", value: "ko" },
+  //   { label: "Chinese", value: "zh" },
+  // ] as const
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        <FormField
+        {/* <FormField
           control={form.control}
           name="language"
           render={({ field }) => (
@@ -134,7 +166,209 @@ export function ComboboxForm() {
               <FormMessage />
             </FormItem>
           )}
+        /> */}
+
+{/* <FormField
+          control={form.control}
+          name="member"
+          render={({ field }) => (
+            <FormItem className="flex flex-col">
+              <FormLabel>member</FormLabel>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <FormControl>
+                    <Button
+                      variant="outline"
+                      role="combobox"
+                      className={cn(
+                        "w-[200px] justify-between",
+                        !field.value && "text-muted-foreground"
+                      )}
+                    >
+                      {field.value
+                        ? members.find(
+                            (member) => member.name === field.value
+                          )?.name
+                        : "Select Member"}
+                      <ChevronsUpDown className="opacity-50" />
+                    </Button>
+                  </FormControl>
+                </PopoverTrigger>
+                <PopoverContent className="w-[200px] p-0">
+                  <Command>
+                    <CommandInput
+                      placeholder="Search framework..."
+                      className="h-9"
+                    />
+                    <CommandList>
+                      <CommandEmpty>No framework found.</CommandEmpty>
+                      <CommandGroup>
+                        {members.map((member) => (
+                          <CommandItem
+                            value={member.name}
+                            key={member.id}
+                            onSelect={() => {
+                              form.setValue("member", member.id)
+                            }}
+                          >
+                            {member.name}
+                            <Check
+                              className={cn(
+                                "ml-auto",
+                                member.id === field.value
+                                  ? "opacity-100"
+                                  : "opacity-0"
+                              )}
+                            />
+                          </CommandItem>
+                        ))}
+                      </CommandGroup>
+                    </CommandList>
+                  </Command>
+                </PopoverContent>
+              </Popover>
+              <FormDescription>
+                This is the member that will be selected.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        /> */}
+
+<FormField
+          control={form.control}
+          name="member"
+          render={({ field }) => (
+            <FormItem className="flex flex-col">
+              <FormLabel>Member</FormLabel>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <FormControl>
+                    <Button
+                      variant="outline"
+                      role="combobox"
+                      className={cn(
+                        "w-[200px] justify-between",
+                        !field.value && "text-muted-foreground"
+                      )}
+                    >
+                      {field.value
+                        ? members2.find(
+                            (language) => language.value === field.value
+                          )?.label
+                        : "Select member"}
+                      <ChevronsUpDown className="opacity-50" />
+                    </Button>
+                  </FormControl>
+                </PopoverTrigger>
+                <PopoverContent className="w-[200px] p-0">
+                  <Command>
+                    <CommandInput
+                      placeholder="Search framework..."
+                      className="h-9"
+                    />
+                    <CommandList>
+                      <CommandEmpty>No framework found.</CommandEmpty>
+                      <CommandGroup>
+                        {members2.map((language) => (
+                          <CommandItem
+                            value={language.label}
+                            key={language.value}
+                            onSelect={() => {
+                              form.setValue("member", language.value)
+                            }}
+                          >
+                            {language.label}
+                            <Check
+                              className={cn(
+                                "ml-auto",
+                                language.value === field.value
+                                  ? "opacity-100"
+                                  : "opacity-0"
+                              )}
+                            />
+                          </CommandItem>
+                        ))}
+                      </CommandGroup>
+                    </CommandList>
+                  </Command>
+                </PopoverContent>
+              </Popover>
+              <FormDescription>
+                This is the member that will be used in the form.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
         />
+
+<FormField
+          control={form.control}
+          name="book"
+          render={({ field }) => (
+            <FormItem className="flex flex-col">
+              <FormLabel>Book</FormLabel>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <FormControl>
+                    <Button
+                      variant="outline"
+                      role="combobox"
+                      className={cn(
+                        "w-[200px] justify-between",
+                        !field.value && "text-muted-foreground"
+                      )}
+                    >
+                      {field.value
+                        ? books2.find(
+                            (language) => language.value === field.value
+                          )?.label
+                        : "Select book"}
+                      <ChevronsUpDown className="opacity-50" />
+                    </Button>
+                  </FormControl>
+                </PopoverTrigger>
+                <PopoverContent className="w-[200px] p-0">
+                  <Command>
+                    <CommandInput
+                      placeholder="Search framework..."
+                      className="h-9"
+                    />
+                    <CommandList>
+                      <CommandEmpty>No framework found.</CommandEmpty>
+                      <CommandGroup>
+                        {books2.map((language) => (
+                          <CommandItem
+                            value={language.label}
+                            key={language.value}
+                            onSelect={() => {
+                              form.setValue("book", language.value)
+                            }}
+                          >
+                            {language.label}
+                            <Check
+                              className={cn(
+                                "ml-auto",
+                                language.value === field.value
+                                  ? "opacity-100"
+                                  : "opacity-0"
+                              )}
+                            />
+                          </CommandItem>
+                        ))}
+                      </CommandGroup>
+                    </CommandList>
+                  </Command>
+                </PopoverContent>
+              </Popover>
+              <FormDescription>
+                This is the book that will be used in the form.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
         <Button type="submit">Submit</Button>
       </form>
     </Form>

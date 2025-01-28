@@ -1,10 +1,12 @@
 "use client";
 
+import { book, member } from "@prisma/client";
 import { BookDialog } from "./book-dialog";
+import { LoanDialog } from "./book-loan-dialog";
 import { MemberDialog } from "./member-dialog";
 
-export default function NavBar() {
 
+export default function NavBar(data: {books: book[], members: member[]}) {
     return (
       <header className="bg-primary sticky top-0">
         <div className="flex justify-between py-4 container mx-auto">
@@ -17,7 +19,7 @@ export default function NavBar() {
 
             <MemberDialog />
   
-            
+            <LoanDialog members={data.members} books={data.books} />
               
             </div>
         </div>

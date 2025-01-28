@@ -5,7 +5,10 @@ import MemberList from "@/components/member-list";
 import { getBookLoans } from "./actions/bookloan";
 import BookLoanList from "@/components/book-loan-list";
 //import BookLoanForm from "@/components/book-loan-form";
-import { ComboboxForm } from "@/components/test-form";
+//import { ComboboxForm } from "@/components/test-form";
+//import BookLoanForm from "@/components/book-loan-form";
+import NavBar from "@/components/navbar";
+
 
 
 export default async function Page() {
@@ -13,10 +16,9 @@ export default async function Page() {
   const members = await getMembers();
   const loans = await getBookLoans();
   return (
+
     <main>
-      <div>
-        <ComboboxForm />
-      </div>
+      <NavBar books={books} members={members} />
       <div>
         <h1>Loans</h1>
         <BookLoanList data={loans}
