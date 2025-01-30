@@ -1,6 +1,7 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
+import { bookloan } from "@prisma/client";
 //import { Status } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
@@ -13,7 +14,7 @@ import { z } from "zod";
 // export type OverdueLoans = OverdueLoan[];
 
 export async function getBookLoans() {
-  const loans = await prisma.bookloan.findMany({
+  let loans = await prisma.bookloan.findMany({
     include: {
       book: true,
       member: true,
@@ -21,31 +22,66 @@ export async function getBookLoans() {
   });
   const today = new Date();
   const overDue: string[] = [];
+
   loans.map((loan) => {
     if (loan.dueDate < today && loan.status === "ACTIVE") {
       overDue.push(loan.id);
     }
   });
+  console.log(overDue);
+  try {
+    if (overDue.length !== 0) {
+      await prisma.bookloan.updateMany({
+        where: {
+          id: {
+            in: overDue,
+          },
+        },
+        data: {
+          status: "OVERDUE",
+        },
+      });
+      loans = await prisma.bookloan.findMany({
+        include: {
+          book: true,
+          member: true,
+        },
+      });
+    }
+  } catch (e) {
+    console.log(e);
+  }
 
-  await prisma.bookloan.updateMany({
+  return loans;
+}
+
+export async function getActiveBookLoans() {
+  const loans = await prisma.bookloan.findMany({
     where: {
-      id: {
-        in: overDue,
+      status: {
+        not: "RETURNED",
       },
     },
-    data: {
-      status: "OVERDUE",
+    include: {
+      book: true,
+      member: true,
     },
   });
+  
+  return loans;
+}
 
-  // const result = await prisma.$transaction(async (tx) => {
-  //   console.log("Starting transaction...");
-
-  //   await tx.bookloan.updateMany({
-  //     where: { id: fromAccountId },
-  //   });
-  // })
-
+export async function getReturnedBookLoans() {
+  const loans = await prisma.bookloan.findMany({
+    where: {
+      status:  "RETURNED",
+    },
+    include: {
+      book: true,
+      member: true,
+    },
+  });
+  
   return loans;
 }
 
@@ -78,6 +114,47 @@ export async function CreateBookLoan(previousState: unknown, formData: FormData)
       return result.error.flatten();
     }
 
+    const activeLoan = await prisma.bookloan.findFirst({
+      where: {
+        bookId: result.data.bookId,
+        status: "ACTIVE",
+      },
+    });
+    if (activeLoan !== null) {
+      return {
+        fieldErrors: {
+          bookId: ["Book is already loaned out."],
+          memberId: [""],
+        },
+      };
+    }
+
+    const userLoans = await prisma.bookloan.findMany({
+      where: {
+        memberId: result.data.memberId,
+        status: {not: "RETURNED"},
+      },
+    });
+    if (userLoans.length >= 3) {
+      return {
+        fieldErrors: {
+          bookId: [""],
+          memberId: ["Use alread has loaned 3 books"],
+        },
+      };
+    }
+    userLoans.map((loan) => {
+      if(loan.status === "OVERDUE")
+      {
+        return {
+          fieldErrors: {
+            bookId: [""],
+            memberId: ["User has an overdue book."],
+          },
+        };
+      }
+    })
+
     const loan = await prisma.bookloan.create({
       data: {
         bookId: result.data.bookId,
@@ -99,4 +176,47 @@ export async function UpdateBookLoan(previousState: unknown, formData: FormData)
       console.log(result.error.flatten());
       return result.error.flatten();
     }
+}
+
+export async function ExtendBookLoan(loan: bookloan) {
+  const newDue: Date = loan.dueDate;
+  const today: Date = new Date();
+  newDue.setDate(newDue.getDate() + 7);
+  try {
+    if((loan.status === "OVERDUE") && (today < newDue) ) {
+      await prisma.bookloan.update({
+        where: {
+          id: loan.id,
+          },
+        data: {
+          dueDate: newDue,
+          status: "ACTIVE",
+        },
+      });
+    } else {
+      await prisma.bookloan.update({
+        where: {
+          id: loan.id,
+          },
+        data: {
+          dueDate: newDue,
+        },
+      });
+    }
+  } catch (e) {
+    console.log(e)
+  }
+  revalidatePath("/");
+}
+
+export async function ReturnBookLoan(loan: bookloan) {
+  await prisma.bookloan.update({
+    where: {
+      id: loan.id,
+      },
+    data: {
+      status: "RETURNED",
+    },
+  });
+  revalidatePath("/");
 }

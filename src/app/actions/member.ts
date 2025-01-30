@@ -150,3 +150,15 @@ export async function DeleteMember(id: string) {
     })
     revalidatePath("/");
 }
+
+export async function getBorrowHistory(id: string) {
+  const result = await prisma.member.findUnique({
+    where: {
+      id,
+    },
+    include: {
+      loans: true,
+    },
+  });
+return result?.loans;
+}

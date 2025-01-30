@@ -32,6 +32,18 @@ export async function getBook(id: string) {
     });
 }
 
+export async function getLoanHistory(id: string) {
+  const result = await prisma.book.findUnique({
+    where: {
+        id,
+    },
+    include: {
+      loans: true,
+    }
+});
+return result?.loans;
+}
+
 export async function CreateBook(previousState: unknown, formData: FormData) {
     const result = formSchema.safeParse(Object.fromEntries(formData));
     if (!result.success) {
