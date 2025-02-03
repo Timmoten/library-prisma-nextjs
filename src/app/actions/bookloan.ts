@@ -19,6 +19,7 @@ export async function getBookLoans() {
       book: true,
       member: true,
     },
+    orderBy: { status: "asc"}
   });
   const today = new Date();
   const overDue: string[] = [];
@@ -170,13 +171,13 @@ export async function CreateBookLoan(previousState: unknown, formData: FormData)
         console.log(result.data);
 }
 
-export async function UpdateBookLoan(previousState: unknown, formData: FormData) {
-    const result = formSchema.safeParse(Object.fromEntries(formData));
-    if (!result.success) {
-      console.log(result.error.flatten());
-      return result.error.flatten();
-    }
-}
+// export async function UpdateBookLoan(previousState: unknown, formData: FormData) {
+//     const result = formSchema.safeParse(Object.fromEntries(formData));
+//     if (!result.success) {
+//       console.log(result.error.flatten());
+//       return result.error.flatten();
+//     }
+// }
 
 export async function ExtendBookLoan(loan: bookloan) {
   const newDue: Date = loan.dueDate;
@@ -210,13 +211,31 @@ export async function ExtendBookLoan(loan: bookloan) {
 }
 
 export async function ReturnBookLoan(loan: bookloan) {
-  await prisma.bookloan.update({
+  try {
+    if (loan.status === "RETURNED") {
+      console.log("already returned");
+    } else {
+      await prisma.bookloan.update({
+        where: {
+          id: loan.id,
+        },
+        data: {
+          status: "RETURNED",
+          returnDate: new Date(),
+        },
+      });
+    }
+  } catch (e) {
+    console.log(e);
+  }
+  revalidatePath("/");
+}
+
+export async function DeleteBookLoan(id: string) {
+  await prisma.bookloan.delete({
     where: {
-      id: loan.id,
+      id,
       },
-    data: {
-      status: "RETURNED",
-    },
   });
   revalidatePath("/");
 }

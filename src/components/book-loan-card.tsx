@@ -2,8 +2,8 @@
 
 import { book, bookloan, member } from "@prisma/client";
 import { Button } from "./ui/button";
-import { CalendarPlus2 } from "lucide-react";
-import { ExtendBookLoan } from "@/app/actions/bookloan";
+import { CalendarPlus2, Trash2, Undo2 } from "lucide-react";
+import { DeleteBookLoan, ExtendBookLoan, ReturnBookLoan } from "@/app/actions/bookloan";
 // import { BookDialog } from "./book-dialog";
 // import { Button } from "./ui/button";
 // import { DeleteBook } from "@/app/actions/book";
@@ -31,9 +31,14 @@ export default function BookLoanCard( data : { loan: bookloan , member: member, 
         </Button>
       </div>
       <div className="flex my-auto">
-        {/* <Button variant={"destructive"} onClick={() => DeleteBook(data.id)}>
+      <Button variant={"default"} onClick={() => ReturnBookLoan(data.loan)}>
+        <Undo2 />
+        </Button>
+      </div>
+      <div className="flex my-auto">
+       <Button variant={"destructive"} onClick={() => DeleteBookLoan(data.loan.id)}>
         <Trash2 />
-        </Button> */}
+        </Button>
       </div>
     </div>
   );
