@@ -26,16 +26,16 @@ import BookLoanCard from "./book-loan-card";
 //type Data = Awaited<ReturnType<typeof getBookLoans>>;
 
 export default function BookLoanList({ data }: { data: BookLoan }) {
-    return (
-        <div className="Flex container gap-2 border-black border-2 m-2 p-2">
-            {data.map((loan) => (
-                <BookLoanCard 
-                key={loan.id}
-                loan={loan}
-                book={loan.book}
-                member={loan.member}
-                />
-            ))}
-        </div>
-    )
+  return (
+    <div className="Flex container gap-2 m-2 p-2">
+      {data.map((loan) => (
+        <BookLoanCard
+          key={loan.id}
+          loan={loan}
+          book={loan.book}
+          member={loan.member}
+        />
+      ))}
+    </div>
+  );
 }

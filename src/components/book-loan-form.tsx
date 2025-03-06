@@ -24,12 +24,19 @@ import { Input } from "./ui/input";
 //   } from "@/components/ui/drawer";
 import { book, bookloan, member } from "@prisma/client";
 //import { useMediaQuery } from "@/hooks/use-media-query"
-import { CreateBookLoan, UpdateBookLoan } from "@/app/actions/bookloan";
+import { CreateBookLoan } from "@/app/actions/bookloan";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 //import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "./ui/form";
 //import { cn } from "@/lib/utils";
 //import { Check, ChevronsUpDown } from "lucide-react";
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "./ui/command";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "./ui/command";
 //import { BookLoan } from "@/types/bookloan";
 
 // type Status = {
@@ -66,94 +73,91 @@ import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, Command
 // }
 
 type Status = {
-  value: string
-  label: string
-}
+  value: string;
+  label: string;
+};
 
-export default function BookLoanForm( data : {members: member[], books: book[],  loan?: bookloan}) {
-    // const [open, setOpen] = useState(false);
-    // const [selectedStatus, setSelectedStatus] = useState<Status | null>(null);
-  
-    const [state, action, isPending] = useActionState((!data.loan? CreateBookLoan : UpdateBookLoan), null);
+export default function BookLoanForm(data: {
+  members: member[];
+  books: book[];
+  loan?: bookloan;
+}) {
+  // const [open, setOpen] = useState(false);
+  // const [selectedStatus, setSelectedStatus] = useState<Status | null>(null);
 
-    const [open, setOpen] = useState(false)
-    const [open2, setOpen2] = useState(false)
-    const [theBook, setTheBook] = useState("");
-    const [theMember, setTheMember] = useState(""); 
+  const [state, action, isPending] = useActionState(CreateBookLoan, null);
 
+  const [open, setOpen] = useState(false);
+  const [open2, setOpen2] = useState(false);
+  const [theBook, setTheBook] = useState("");
+  const [theMember, setTheMember] = useState("");
 
-  const [selectedStatus, setSelectedStatus] = useState<Status | null>(
-    null
-  )
+  const [selectedStatus, setSelectedStatus] = useState<Status | null>(null);
 
-  const [selectedStatus2, setSelectedStatus2] = useState<Status | null>(
-    null
-  )
-    
-    //const [state, action, isPending] = useActionState(UpdateBook, null);
+  const [selectedStatus2, setSelectedStatus2] = useState<Status | null>(null);
 
-    const members2 = data.members.map((member) => 
-      {return {label: member.name, value: member.id}}
-      );
+  //const [state, action, isPending] = useActionState(UpdateBook, null);
 
-      const books2 = data.books.map((book) => {
-        return { label: book.title, value: book.id };
-      });
-    
+  const members2 = data.members.map((member) => {
+    return { label: member.name, value: member.id };
+  });
 
-      // const booksWduplicates = data.books.map((book) => {
-      //   return { label: book.title, value: book.id };
-      // });
+  const books2 = data.books.map((book) => {
+    return { label: book.title, value: book.id };
+  });
 
-      // //const pos = myArray.map(e => e.hello).indexOf('stevie');
+  // const booksWduplicates = data.books.map((book) => {
+  //   return { label: book.title, value: book.id };
+  // });
 
-      // function removeDuplicates(data: Status[]) {
-      //   const arr: Status[] = [];
-      //   data.forEach((stat) => {
-      //          if(arr.map(s => s.label).indexOf(stat.label) === -1)
-      //          {
-      //           arr.push(stat);
-      //          }
-      //        })
-      //        console.log(arr);
-      //   return arr;
-      //   //data.map(stat => stat.label).indexOf('thing')
-      // }
+  // //const pos = myArray.map(e => e.hello).indexOf('stevie');
 
-      // const books2 = removeDuplicates(booksWduplicates);
+  // function removeDuplicates(data: Status[]) {
+  //   const arr: Status[] = [];
+  //   data.forEach((stat) => {
+  //          if(arr.map(s => s.label).indexOf(stat.label) === -1)
+  //          {
+  //           arr.push(stat);
+  //          }
+  //        })
+  //        console.log(arr);
+  //   return arr;
+  //   //data.map(stat => stat.label).indexOf('thing')
+  // }
 
-      // function removeDuplicates(data: Status[]) {
-      //   let tmp: Status[] = [];
-      //   data.forEach((stat, index, arr) => {
-      //     if(tmp.indexOf(value) === -1)
-      //   })
-      //   return data.filter((value, index) => data.indexOf(value) === index);
-      // }
+  // const books2 = removeDuplicates(booksWduplicates);
 
-      // const uniqueStrings: string[] = [];
-      // const uniqueArray: Status[] = booksWduplicates.filter(o => {
-      // const s = JSON.stringify(o);
-      // if (!uniqueStrings.includes(s)) {
-      //   uniqueStrings.push(s);
-      //   return true;
-      // }
-      //  return false;
-      // });
+  // function removeDuplicates(data: Status[]) {
+  //   let tmp: Status[] = [];
+  //   data.forEach((stat, index, arr) => {
+  //     if(tmp.indexOf(value) === -1)
+  //   })
+  //   return data.filter((value, index) => data.indexOf(value) === index);
+  // }
 
-      // console.log(uniqueArray);
+  // const uniqueStrings: string[] = [];
+  // const uniqueArray: Status[] = booksWduplicates.filter(o => {
+  // const s = JSON.stringify(o);
+  // if (!uniqueStrings.includes(s)) {
+  //   uniqueStrings.push(s);
+  //   return true;
+  // }
+  //  return false;
+  // });
 
-      // const books2 = uniqueArray;
+  // console.log(uniqueArray);
 
-      // const books2 = removeDuplicates(booksWduplicates);
-    
-  
+  // const books2 = uniqueArray;
+
+  // const books2 = removeDuplicates(booksWduplicates);
+
   return (
     <form action={action} className="flex flex-col gap-2">
       <h1 className="text-center">
         {data.loan ? "Edit loan" : "Add a new loan"}
       </h1>
       <div className="flex container flex-col content-center justify-center mx-auto">
-        {data.loan ? (
+        {/* {data.loan ? (
           <div className="flex flex-col container p-2">
             <div className="flex">
               <div className="flex my-auto container justify-end">
@@ -176,7 +180,7 @@ export default function BookLoanForm( data : {members: member[], books: book[], 
           </div>
         ) : (
           <p></p>
-        )}
+        )} */}
 
         {/* <div className="flex items-center space-x-4"> 
       <p className="text-sm text-muted-foreground">Status</p>
@@ -247,7 +251,7 @@ export default function BookLoanForm( data : {members: member[], books: book[], 
                   type="hidden"
                   value={theMember}
                   onChange={(e) => {
-                    setTheMember(e.target.value)
+                    setTheMember(e.target.value);
                   }}
                   // onChange={(e) => {
                   //   setSelectedStatus((prev) =>
@@ -455,7 +459,7 @@ export default function BookLoanForm( data : {members: member[], books: book[], 
                   type="hidden"
                   value={theBook}
                   onChange={(e) => {
-                    setTheBook(e.target.value)
+                    setTheBook(e.target.value);
                   }}
                   // value={selectedStatus2?.value}
                   // onChange={(e) => {
